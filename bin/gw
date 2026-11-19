@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+# Entry point; scripts/install.sh links this into ~/.local/bin/gw.
+import os
+import sys
+
+REPO = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.insert(0, os.path.join(REPO, "collector"))
+
+from gw.cli import main  # noqa: E402
+
+sys.exit(main())

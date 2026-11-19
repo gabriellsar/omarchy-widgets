@@ -1,0 +1,23 @@
+# Segredos e dados locais nunca entram no repo
+*.env
+!config/secrets.example.env
+secrets*
+!config/secrets.example.env
+positions.toml
+config.toml
+!config/config.example.toml
+state/
+*.local.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Agentes / editores
+.claude/settings.local.json
+.worktrees/
+screenshots/
+
+# Cópias geradas de shared/ (scripts/sync-shared.sh)
+plugins/*/common/

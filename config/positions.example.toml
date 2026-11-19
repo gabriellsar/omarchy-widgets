@@ -1,0 +1,20 @@
+# Posições manuais (invest.source = "file"). P&L e preço vêm do mercado.
+equity = 48210.37            # patrimônio em USD (opcional)
+
+[[position]]
+ticker = "BTC"
+side = "LONG"
+qty = 0.35
+entry = 88120.0
+
+[[position]]
+ticker = "NVDA"
+side = "LONG"
+qty = 40
+entry = 171.2
+
+[[position]]
+ticker = "ETH"
+side = "SHORT"
+qty = 2.0
+entry = 3410.0

@@ -1,0 +1,6 @@
+[Unit]
+Description=gabriellsar-widgets: exporta config.json para os widgets
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/gw config

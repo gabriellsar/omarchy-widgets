@@ -1,0 +1,8 @@
+[Unit]
+Description=gabriellsar-widgets: reexporta o config quando ele muda
+
+[Path]
+PathChanged=%h/.config/gabriellsar-widgets/config.toml
+
+[Install]
+WantedBy=default.target

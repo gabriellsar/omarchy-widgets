@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Investimentos — Carteira Quantfury</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/gabriel-s/tokens.css">
+<link rel="stylesheet" href="ds/gabriel-s/components/bundle.css">
+<script src="ds/gabriel-s/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#7cf0d4}a:hover{color:#f4fbfb}
+</style>
+</helmet>
+<div style="width: 560px; height: 400px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background-color: var(--bg); background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 16px 16px; font-family: var(--font-sans); color: var(--text)">
+<section aria-label="Carteira Quantfury" style="position: relative; width: 400px; box-sizing: border-box; padding: 24px; background: var(--surface); border: 1px solid var(--line-strong); display: flex; flex-direction: column; gap: 16px">
+<span aria-hidden="true" style="position: absolute; left: -1px; top: -1px; width: 12px; height: 12px; border-left: 2px solid var(--accent); border-top: 2px solid var(--accent)"></span>
+<div style="display: flex; justify-content: space-between; align-items: center">
+<p class="gs-label">0x01 · Quantfury</p>
+<x-import component-from-global-scope="GS.Tag" tone="neutral">MCP · Sync [HH:MM]</x-import>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<p class="gs-label">Patrimônio</p>
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<p style="margin: 0; font-family: var(--font-mono); font-size: 32px; line-height: 36px; letter-spacing: -0.02em; color: var(--text-strong); font-variant-numeric: tabular-nums">$ [VALOR]</p>
+<p style="margin: 0; font-family: var(--font-mono); font-size: 12px; line-height: 16px; color: var(--accent)">▲ [+0,00%] hoje</p>
+</div>
+</div>
+<div style="display: flex; flex-direction: column">
+<div style="display: grid; grid-template-columns: 96px 1fr 88px; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line-strong); font-family: var(--font-mono); font-size: 11px; line-height: 16px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted)">
+<span>Ativo</span>
+<span>Hoje vs 90D</span>
+<span style="text-align: right">P&amp;L</span>
+</div>
+<sc-for list="{{rows}}" as="p" hint-placeholder-count="3">
+<div style="display: grid; grid-template-columns: 96px 1fr 88px; gap: 12px; align-items: center; height: 44px; border-bottom: 1px solid var(--line)">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-family: var(--font-mono); font-size: 13px; line-height: 16px; color: var(--text-strong)">{{p.ticker}}</span>
+<span style="font-family: var(--font-mono); font-size: 11px; line-height: 12px; letter-spacing: 0.14em; color: var(--muted)">{{p.side}}</span>
+</div>
+<div style="display: flex; align-items: center; gap: 8px">
+<svg width="72" height="24" viewBox="0 0 72 24" aria-hidden="true">
+<line x1="0" y1="23.5" x2="72" y2="23.5" stroke="var(--line-strong)" stroke-width="1"></line>
+<path d="{{bell}}" fill="none" stroke="var(--control)" stroke-width="1"></path>
+<circle cx="{{p.mx}}" cy="{{p.my}}" r="3" fill="{{p.dot}}"></circle>
+<sc-if value="{{p.alert}}" hint-placeholder-val="{{false}}">
+<circle cx="{{p.mx}}" cy="{{p.my}}" r="6" fill="none" stroke="var(--signal)" stroke-width="1"></circle>
+</sc-if>
+</svg>
+<sc-if value="{{p.alert}}" hint-placeholder-val="{{false}}">
+<span style="font-family: var(--font-mono); font-size: 11px; line-height: 16px; letter-spacing: 0.08em; color: var(--signal)">FORA DE 2σ</span>
+</sc-if>
+</div>
+<span style="text-align: right; font-family: var(--font-mono); font-size: 13px; line-height: 16px; color: var(--text); font-variant-numeric: tabular-nums">[P&amp;L]</span>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; font-family: var(--font-mono); font-size: 11px; line-height: 16px; letter-spacing: 0.14em; color: var(--muted)">FIG.02 — POSIÇÕES ABERTAS · QUANTFURY MCP</p>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":560,"height":400}}'>
+class Component extends DCLogic {
+renderVals() {
+const W = 72, H = 24;
+const pdf = (z) => Math.exp(-z * z / 2);
+const X = (z) => ((z + 3.5) / 7) * W;
+const Y = (z) => H - pdf(z) * (H - 4);
+let d = '';
+for (let i = 0; i <= 42; i++) { const z = -3.5 + i * 7 / 42; d += (i ? 'L' : 'M') + X(z).toFixed(1) + ' ' + Y(z).toFixed(1) + ' '; }
+const pos = [
+{ ticker: 'BTC', side: 'LONG', z: 0.6 },
+{ ticker: 'NVDA', side: 'LONG', z: 2.4 },
+{ ticker: 'ETH', side: 'SHORT', z: -0.8 }
+];
+return {
+bell: d,
+rows: pos.map((p) => {
+const alert = Math.abs(p.z) > 2;
+return { ...p, alert, mx: X(p.z), my: Y(p.z), dot: alert ? 'var(--signal)' : 'var(--text-strong)' };
+})
+};
+}
+}
+</script>
+</body>
+</html>

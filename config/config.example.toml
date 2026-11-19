@@ -1,0 +1,77 @@
+# gabriellsar-widgets — preferências locais (sem segredos).
+# `gw init` copia este arquivo para ~/.config/gabriellsar-widgets/config.toml.
+# Segredos ficam em ~/.config/gabriellsar-widgets/secrets.env (chmod 600).
+
+[invest]
+# "mcp" (servidor MCP da Quantfury) ou "file" (positions.toml manual)
+source = "file"
+refresh_sec = 300
+currency = "USD"
+
+[invest.mcp]
+# Servidor MCP por stdio: o comando que você já usa no Claude Code (`claude mcp get quantfury`).
+command = []                      # ex.: ["npx", "-y", "quantfury-mcp"]
+# …ou Streamable HTTP:
+url = ""                          # ex.: "http://127.0.0.1:3333/mcp"
+# Variáveis de secrets.env repassadas ao processo stdio:
+secret_env = []                   # ex.: ["QUANTFURY_API_KEY"]
+# Cabeçalhos HTTP; ${NOME} é trocado pelo valor em secrets.env:
+headers = {}                      # ex.: { Authorization = "Bearer ${QUANTFURY_API_KEY}" }
+# Nomes das tools (rode `gw mcp tools` para ver as do seu servidor):
+positions_tool = ""               # ex.: "get_open_positions"
+positions_args = {}
+account_tool = ""                 # opcional: tool com patrimônio / variação do dia
+account_args = {}
+
+# Caminhos (com ponto) dentro do JSON que as tools devolvem.
+# Teste com `gw mcp <tool>` e ajuste.
+[invest.mcp.map]
+positions = "positions"           # lista de posições dentro do resultado
+ticker = "symbol"
+side = "side"                     # LONG/SHORT ou BUY/SELL; vazio = sinal de qty
+qty = "quantity"
+entry = "entry_price"
+mark = "mark_price"
+pnl = "unrealized_pnl"
+equity = "equity"                 # lido do resultado de account_tool
+day_change_pct = ""               # fração (0.0124 = +1,24%); vazio = estimado
+
+[invest.file]
+path = ""                         # vazio = ~/.config/gabriellsar-widgets/positions.toml
+
+[invest.market]
+# "yahoo" (sem chave) ou "brapi" (B3, BRAPI_TOKEN em secrets.env)
+provider = "yahoo"
+window_days = 90
+# Ticker da corretora -> símbolo do provedor. Cripto comum já vira XXX-USD.
+symbol_map = {}                   # ex.: { "PETR4" = "PETR4.SA" }
+
+[pomodoro]
+focus_min = 25
+short_break_min = 5
+long_break_min = 15
+sessions = 4
+autoplay = true                   # toca a playlist ao começar um foco
+pause_on_break = true             # pausa o Spotify nas pausas
+default_playlist = ""             # uri, ex.: "spotify:playlist:37i9dQZF1DWZeKCadgRdKQ"
+
+[spotify]
+player = "spotify"                # nome do player MPRIS (playerctl -l)
+use_web_api = false               # true = lista suas playlists (precisa de `gw spotify auth`)
+
+# Favoritas: aparecem primeiro no seletor, sem precisar de Web API.
+[[spotify.playlists]]
+name = "Deep Focus"
+uri = "spotify:playlist:37i9dQZF1DWZeKCadgRdKQ"
+
+[agents]
+poll_ms = 1500
+log_lines = 4
+faces = ["bolha", "visor", "orelha", "ciclope"]
+tints = ["data-1", "data-2", "data-4", "data-3"]
+# Rosto e cor fixos por nome de agente no herdr (o resto é distribuído em rodízio):
+assign = {}                       # ex.: { "tcc-forecast" = { face = "visor", tint = "data-2" } }
+
+[dock]
+# desktop ids, na ordem. Vazio = usa dock.pinned do shell.json do Omarchy.
+apps = []                         # ex.: ["com.mitchellh.ghostty.desktop", "code.desktop"]

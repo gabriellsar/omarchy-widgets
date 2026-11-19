@@ -1,0 +1,7 @@
+[Unit]
+Description=gabriellsar-widgets: carteira (Quantfury + mercado)
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/gw invest

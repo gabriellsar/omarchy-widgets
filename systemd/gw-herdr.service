@@ -1,0 +1,11 @@
+[Unit]
+Description=gabriellsar-widgets: agentes do herdr
+After=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/bin/gw herdr watch
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

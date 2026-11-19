@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Agentes — widget (componente)</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/gabriel-s/tokens.css">
+<link rel="stylesheet" href="ds/gabriel-s/components/bundle.css">
+<script src="ds/gabriel-s/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<section aria-label="Agentes" style="position: relative; box-sizing: border-box; background: var(--surface); border: 1px solid var(--line-strong); display: flex; width: {{boxW}}; flex-direction: {{dir}}; font-family: var(--font-sans); color: var(--text)">
+<span aria-hidden="true" style="position: absolute; left: -1px; top: -1px; width: 12px; height: 12px; border-left: 2px solid var(--accent); border-top: 2px solid var(--accent)"></span>
+<nav aria-label="Escolher agente" style="flex: none; width: 76px; box-sizing: border-box; padding: 16px 0 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; border-left: 1px solid {{railBorderL}}; border-right: 1px solid {{railBorderR}}">
+<x-import component-from-global-scope="GS.Button" variant="ghost" size="sm" aria-label="{{toggleLabel}}" aria-expanded="{{isOpen}}" on-click="{{toggle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true"><path d="{{toggleIcon}}"></path></svg></x-import>
+<span aria-hidden="true" style="width: 24px; height: 1px; background: var(--line)"></span>
+<sc-for list="{{agents}}" as="a" hint-placeholder-count="4">
+<button type="button" onClick="{{a.pick}}" aria-label="{{a.aria}}" aria-pressed="{{a.selected}}" style="position: relative; width: 48px; height: 48px; display: grid; place-items: center; padding: 0; background: {{a.chipBg}}; border: 1px solid {{a.chipBorder}}; cursor: pointer">
+<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+<sc-for list="{{a.cells}}" as="c" hint-placeholder-count="49">
+<circle class="{{c.cls}}" cx="{{c.x}}" cy="{{c.y}}" r="{{c.r}}" fill="{{c.fill}}"></circle>
+</sc-for>
+</svg>
+<span aria-hidden="true" style="position: absolute; right: -5px; bottom: -5px; width: 18px; height: 18px; display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line-strong); color: {{a.stColor}}"><svg class="{{a.stCls}}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="{{a.stIcon}}"></path></svg></span>
+</button>
+</sc-for>
+<span aria-hidden="true" style="width: 24px; height: 1px; background: var(--line)"></span>
+<x-import component-from-global-scope="GS.Button" variant="ghost" size="sm" aria-label="Novo agente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></x-import>
+</nav>
+<sc-if value="{{isOpen}}" hint-placeholder-val="{{true}}">
+<div style="flex-grow: 1; min-width: 0; box-sizing: border-box; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<p class="gs-label">0x03 · Agentes <span style="color: var(--control)">· herdr</span></p>
+<span style="display: inline-flex; align-items: center; gap: 6px; flex: none; color: {{cur.stColor}}; font-family: var(--font-mono); font-size: 11px; line-height: 16px; letter-spacing: 0.14em; text-transform: uppercase"><svg class="{{cur.stCls}}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" aria-hidden="true"><path d="{{cur.stIcon}}"></path></svg>{{cur.stateLabel}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 28px; line-height: 34px; font-weight: 300; letter-spacing: -0.01em; color: var(--text-strong)">{{cur.label}}</span>
+<span style="font-family: var(--font-mono); font-size: 11px; line-height: 14px; letter-spacing: 0.04em; color: var(--muted)">{{cur.sub}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; background: var(--inset); font-family: var(--font-mono); font-size: 12px; line-height: 18px">
+<sc-for list="{{cur.logLines}}" as="l" hint-placeholder-count="3">
+<span style="color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis"><span style="color: var(--control)">│ </span>{{l.t}}</span>
+</sc-for>
+</div>
+<sc-if value="{{cur.isBlocked}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--caution); background: var(--caution-subtle)">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="font-family: var(--font-mono); font-size: 11px; line-height: 16px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--caution)">Permissão · {{cur.tool}}</span>
+<span style="font-family: var(--font-mono); font-size: 13px; line-height: 16px; color: var(--text-strong)">{{cur.file}}</span>
+</div>
+<div style="display: flex; flex-direction: column; padding: 8px 12px; background: var(--inset); font-family: var(--font-mono); font-size: 12px; line-height: 20px">
+<sc-for list="{{cur.diff}}" as="d" hint-placeholder-count="3">
+<span style="color: {{d.c}}">{{d.s}} <span style="color: var(--text)">{{d.t}}</span></span>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<x-import component-from-global-scope="GS.Button" variant="primary" on-click="{{cur.approve}}">1 Sim</x-import>
+<x-import component-from-global-scope="GS.Button" variant="secondary" on-click="{{cur.always}}">2 Sempre</x-import>
+<x-import component-from-global-scope="GS.Button" variant="ghost" on-click="{{cur.deny}}">3 Não</x-import>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{cur.canMessage}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; gap: 8px; align-items: flex-end">
+<div style="flex-grow: 1; min-width: 0">
+<x-import component-from-global-scope="GS.Input" aria-label="Mensagem para {{cur.label}}" placeholder="{{cur.placeholder}}" value="{{cur.msgVal}}" on-change="{{cur.onMsgA}}" mono="{{yes}}"></x-import>
+</div>
+<x-import component-from-global-scope="GS.Button" variant="primary" on-click="{{cur.send}}">Enviar</x-import>
+</div>
+</sc-if>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding-top: 12px; border-top: 1px solid var(--line)">
+<x-import component-from-global-scope="GS.Button" variant="ghost" size="sm" on-click="{{cur.stop}}">Esc Parar</x-import>
+<x-import component-from-global-scope="GS.Button" variant="ghost" size="sm" on-click="{{cycleMode}}">{{modeLabel}}</x-import>
+<x-import component-from-global-scope="GS.Button" variant="ghost" size="sm">/compact</x-import>
+<x-import component-from-global-scope="GS.Button" variant="ghost" size="sm">Abrir pane</x-import>
+</div>
+</div>
+</sc-if>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"side":{"editor":"enum","options":["left","right"],"default":"left"},"collapsed":{"editor":"boolean","default":false},"$preview":{"width":580,"height":520}}'>
+const FACES = {
+bolha: ['.XXXXX.', 'X.....X', 'X.E.E.X', 'X.....X', 'X.XXX.X', 'X.....X', '.XXXXX.'],
+visor: ['...X...', 'XXXXXXX', 'X.....X', 'X.EEE.X', 'X.....X', 'X.....X', 'XXXXXXX'],
+orelha: ['X.....X', 'XX...XX', 'X.....X', 'X.E.E.X', 'X.....X', 'X.X.X.X', '.XXXXX.'],
+ciclope: ['.XXXXX.', 'X.....X', 'X.EEE.X', 'X.E.E.X', 'X.EEE.X', 'X.....X', '.XXXXX.']
+};
+const ST = {
+working: { label: 'Trabalhando', tone: 'accent', dot: true, eye: 'eye-work' },
+blocked: { label: 'Bloqueado', tone: 'caution', dot: true, eye: '' },
+done: { label: 'Pronto', tone: 'neutral', dot: true, eye: 'eye-done' },
+idle: { label: 'Ocioso', tone: 'neutral', dot: false, eye: 'eye-idle' }
+};
+const cellsFor = (face, tint, eyeCls, pitch) => {
+const out = [];
+FACES[face].forEach((row, y) => row.split('').forEach((ch, x) => {
+const on = ch !== '.';
+out.push({ x: x * pitch + pitch / 2, y: y * pitch + pitch / 2, r: on ? pitch * 0.42 : pitch * 0.22, fill: on ? tint : 'var(--line-strong)', cls: ch === 'E' ? eyeCls : '' });
+}));
+return out;
+};
+const INITIAL = () => ([
+{ id: 'a1', label: 'api-refactor', sub: '~/easyfin · claude', face: 'bolha', tint: 'var(--data-1)', st: 'working', log: ['Lendo services/quotes.py', 'Rodando pytest -k integration', '12 passaram · 1 falhou'], prompt: null },
+{ id: 'a2', label: 'tcc-forecast', sub: '~/tcc · claude', face: 'visor', tint: 'var(--data-2)', st: 'blocked', log: ['Analisou o erro de validação', 'Propõe aumentar a camada oculta'], prompt: { tool: 'Edit', file: 'models/lstm.py', diff: [{ s: '-', t: 'hidden_size = 128' }, { s: '+', t: 'hidden_size = 256' }, { s: '+', t: 'dropout = 0.2' }] } },
+{ id: 'a3', label: 'portfolio', sub: '~/portfolio · codex', face: 'orelha', tint: 'var(--data-4)', st: 'done', log: ['Build ok', '3 arquivos alterados', 'Pronto para revisão'], prompt: null },
+{ id: 'a4', label: 'shader-lab', sub: '~/quattro · claude', face: 'ciclope', tint: 'var(--data-3)', st: 'idle', log: ['Aguardando instrução'], prompt: null }
+]);
+
+const ICON = {
+working: 'M12 3a9 9 0 1 0 9 9',
+blocked: 'M12 3L2 21h20zM12 10v5M12 18h.01',
+done: 'M5 12l5 5 9-10',
+idle: 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z'
+};
+const COLOR = { working: 'var(--accent)', blocked: 'var(--caution)', done: 'var(--text-strong)', idle: 'var(--muted)' };
+const MODES = ['Normal', 'Auto', 'Plano'];
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { agents: INITIAL(), sel: 1, msgs: {}, mode: 0, open: null, collapsed: !!props.collapsed };
+}
+componentDidUpdate(prev) {
+if (prev.collapsed !== this.props.collapsed) this.setState({ collapsed: !!this.props.collapsed });
+}
+patch(id, fn) { this.setState({ agents: this.state.agents.map((a) => (a.id === id ? fn(a) : a)) }); }
+renderVals() {
+const view = (a, i) => {
+const s = ST[a.st];
+return {
+...a,
+index: i,
+selected: i === this.state.sel,
+aria: a.label + ', ' + s.label,
+stateLabel: s.label,
+stIcon: ICON[a.st], stColor: COLOR[a.st], stCls: a.st === 'working' ? 'spin' : '',
+cells: cellsFor(a.face, a.tint, s.eye, 4),
+big: cellsFor(a.face, a.tint, s.eye, 6),
+tiny: cellsFor(a.face, a.tint, s.eye, 3),
+isBlocked: a.st === 'blocked', canMessage: a.st !== 'blocked', isDone: a.st === 'done',
+chipBorder: i === this.state.sel && !this.state.collapsed ? 'var(--accent)' : (a.st === 'blocked' ? 'var(--caution)' : 'var(--line-strong)'),
+chipBg: i === this.state.sel && !this.state.collapsed ? 'var(--inset)' : 'transparent',
+logLines: a.log.slice(-4).map((t) => ({ t })),
+diff: a.prompt ? a.prompt.diff.map((d) => ({ ...d, c: d.s === '+' ? 'var(--accent)' : 'var(--signal)' })) : [],
+tool: a.prompt ? a.prompt.tool : '', file: a.prompt ? a.prompt.file : '',
+pick: () => this.setState({ sel: i, open: a.id, collapsed: false }),
+approve: () => this.patch(a.id, (x) => ({ ...x, st: 'working', prompt: null, log: [...x.log, 'Aprovado · editando ' + x.prompt.file] })),
+always: () => this.patch(a.id, (x) => ({ ...x, st: 'working', prompt: null, log: [...x.log, 'Sempre permitir Edit · editando ' + x.prompt.file] })),
+deny: () => this.patch(a.id, (x) => ({ ...x, st: 'idle', prompt: null, log: [...x.log, 'Permissão negada'] })),
+msgVal: this.state.msgs[a.id] || '',
+onMsgA: (e) => this.setState({ msgs: { ...this.state.msgs, [a.id]: e.target.value } }),
+send: () => { const m = (this.state.msgs[a.id] || '').trim(); if (!m) return; this.setState({ msgs: { ...this.state.msgs, [a.id]: '' }, agents: this.state.agents.map((x) => (x.id === a.id ? { ...x, st: 'working', log: [...x.log, '› ' + m] } : x)) }); },
+stop: () => this.patch(a.id, (x) => ({ ...x, st: 'idle', prompt: null, log: [...x.log, 'Interrompido (Esc)'] })),
+placeholder: a.st === 'working' ? 'Mensagem para a fila…' : 'Próxima tarefa…'
+};
+};
+const agents = this.state.agents.map(view);
+const cur = agents[this.state.sel];
+const attention = agents.filter((a) => a.st === 'blocked' || a.st === 'done' || a.id === this.state.open);
+const background = agents.filter((a) => !(a.st === 'blocked' || a.st === 'done' || a.id === this.state.open));
+const pending = agents.filter((a) => a.st === 'blocked' || a.st === 'done').length;
+return {
+yes: true,
+agents, cur, attention, background,
+pendingLabel: pending + (pending === 1 ? ' pede atenção' : ' pedem atenção'),
+hasPending: pending > 0,
+modeLabel: '⇧⇥ ' + MODES[this.state.mode],
+cycleMode: () => this.setState({ mode: (this.state.mode + 1) % 3 }),
+isOpen: !this.state.collapsed,
+boxW: this.state.collapsed ? '78px' : '580px',
+dir: (this.props.side ?? 'left') === 'right' ? 'row-reverse' : 'row',
+railBorderL: (this.props.side ?? 'left') === 'right' && !this.state.collapsed ? 'var(--line)' : 'transparent',
+railBorderR: (this.props.side ?? 'left') === 'left' && !this.state.collapsed ? 'var(--line)' : 'transparent',
+toggleLabel: this.state.collapsed ? 'Abrir painel de agentes' : 'Recolher painel de agentes',
+toggleIcon: ((this.props.side ?? 'left') === 'right') !== this.state.collapsed ? 'M9 6l6 6-6 6M4 6v12' : 'M15 6l-6 6 6 6M20 6v12',
+toggle: () => this.setState({ collapsed: !this.state.collapsed })
+};
+}
+}
+</script>
+</body>
+</html>

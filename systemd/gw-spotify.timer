@@ -1,0 +1,9 @@
+[Unit]
+Description=gabriellsar-widgets: atualiza playlists
+
+[Timer]
+OnStartupSec=30s
+OnUnitActiveSec=1h
+
+[Install]
+WantedBy=timers.target

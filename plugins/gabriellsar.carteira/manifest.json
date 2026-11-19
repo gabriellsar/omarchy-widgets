@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "gabriellsar.carteira",
+  "name": "Carteira",
+  "version": "0.1.0",
+  "author": "Gabriel Rosas",
+  "license": "MIT",
+  "description": "Posições abertas da Quantfury no desktop, com o dia de cada ativo contra a curva de 90 dias.",
+  "kinds": ["service"],
+  "entryPoints": {
+    "service": "Carteira.qml"
+  }
+}

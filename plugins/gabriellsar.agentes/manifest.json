@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "gabriellsar.agentes",
+  "name": "Agentes",
+  "version": "0.1.0",
+  "author": "Gabriel Rosas",
+  "license": "MIT",
+  "description": "Sessões do herdr com rosto e cor por agente: estado, permissões e mensagens sem abrir o terminal.",
+  "kinds": ["service", "bar-widget"],
+  "entryPoints": {
+    "service": "Agentes.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Agentes (herdr)",
+    "description": "Rosto mini, total de agentes e quantos estão bloqueados. Clique chama o painel por cima das janelas.",
+    "category": "AI",
+    "aliases": ["herdr", "agentes"],
+    "allowMultiple": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "gabriellsar.pomodoro",
+  "name": "Pomodoro",
+  "version": "0.1.0",
+  "author": "Gabriel Rosas",
+  "license": "MIT",
+  "description": "Timer de foco em anel de pontos, com playlist do Spotify e controles de faixa.",
+  "kinds": ["service"],
+  "entryPoints": {
+    "service": "Pomodoro.qml"
+  }
+}

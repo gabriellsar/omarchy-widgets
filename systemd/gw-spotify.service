@@ -1,0 +1,7 @@
+[Unit]
+Description=gabriellsar-widgets: playlists do Spotify
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/gw spotify playlists

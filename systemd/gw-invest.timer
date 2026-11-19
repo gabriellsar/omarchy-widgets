@@ -1,0 +1,10 @@
+[Unit]
+Description=gabriellsar-widgets: atualiza a carteira
+
+[Timer]
+OnStartupSec=20s
+OnUnitActiveSec=5min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target
